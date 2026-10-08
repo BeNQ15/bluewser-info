@@ -1,18 +1,280 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Bluewser — Android-браузер с локальными расширениями и редактором расширений.">
+  <title>Bluewser — браузер и расширения</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #121a2d;
+      --panel-2: #172139;
+      --text: #eef3ff;
+      --muted: #a3aec5;
+      --line: rgba(255,255,255,.1);
+      --accent: #8b7cff;
+      --cyan: #65ddcf;
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 75% -10%, rgba(98,91,255,.22), transparent 42%),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1100px, calc(100% - 40px)); margin: auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(11,16,32,.84);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand { font-size: 1.15rem; font-weight: 800; text-decoration: none; }
+    .brand span { color: var(--cyan); }
+    .navlinks { display: flex; flex-wrap: wrap; gap: 20px; }
+    .navlinks a { color: var(--muted); text-decoration: none; font-size: .93rem; }
+    .navlinks a:hover { color: var(--text); }
+
+    .hero { padding: 90px 0 72px; }
+    .eyebrow { color: var(--cyan); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
+    h1 { max-width: 780px; margin: 14px 0; font-size: clamp(2.5rem, 7vw, 5rem); line-height: 1.03; letter-spacing: -.055em; }
+    h1 span { color: var(--cyan); }
+    .intro { max-width: 650px; color: var(--muted); font-size: 1.12rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+    .button {
+      display: inline-flex; justify-content: center; align-items: center;
+      min-height: 44px; padding: 10px 17px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #6556e8);
+      color: white; text-decoration: none; font-weight: 750; border: 0; cursor: pointer;
+    }
+    .button.secondary { background: var(--panel-2); border: 1px solid var(--line); }
+    .button:hover { filter: brightness(1.12); }
+
+    section { padding: 40px 0 58px; scroll-margin-top: 82px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 22px; }
+    h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.15; margin: 0 0 8px; letter-spacing: -.03em; }
+    .muted { color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .card {
+      padding: 22px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(23,33,57,.94), rgba(18,26,45,.94));
+    }
+    .card h3 { margin: 0 0 5px; font-size: 1.15rem; }
+    .card p { margin: 6px 0 16px; color: var(--muted); }
+    .card-top { display: flex; align-items: center; gap: 13px; }
+    .icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: rgba(139,124,255,.15); font-size: 1.4rem; }
+    .meta { color: var(--muted); font-size: .88rem; }
+    .release-list { display: grid; gap: 12px; }
+    .release { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+    .release h3 { overflow-wrap: anywhere; }
+    .empty { color: var(--muted); padding: 18px 0; }
+    .tag { color: var(--cyan); font-size: .84rem; font-weight: 700; }
+    .notice { padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; color: var(--muted); background: rgba(255,255,255,.025); }
+    footer { padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); }
+    footer a { color: var(--text); }
+    @media (max-width: 650px) {
+      .wrap { width: min(100% - 28px, 1100px); }
+      .hero { padding: 65px 0 45px; }
+      .grid { grid-template-columns: 1fr; }
+      .section-head, .release { align-items: flex-start; flex-direction: column; }
+      nav { align-items: flex-start; padding: 14px 0; flex-direction: column; gap: 8px; }
+      .navlinks { gap: 14px; }
+    }
+  </style>
+</head>
+
 <body>
+  <header>
+    <nav class="wrap" aria-label="Основная навигация">
+      <a class="brand" href="#home">🌀 Blue<span>wser</span></a>
+      <div class="navlinks">
+        <a href="#downloads">Скачать</a>
+        <a href="#extensions">Extensions</a>
+        <a href="#about">О проекте</a>
+        <a href="https://github.com/BeNQ15/Bluewser" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </nav>
+  </header>
 
-<h1>Bluewser</h1>
+  <main>
+    <section class="hero wrap" id="home">
+      <div class="eyebrow">Android-браузер · расширения · локальная работа</div>
+      <h1>Ваш браузер.<br><span>Ваши правила.</span></h1>
+      <p class="intro">
+        Bluewser — Android-браузер с поддержкой расширений и собственным редактором.
+        Проект развивается, а новые APK можно скачать со страницы релизов.
+      </p>
+      <div class="actions">
+        <a class="button" href="#downloads">Скачать Bluewser</a>
+        <a class="button secondary" href="#extensions">Изучить Extensions</a>
+      </div>
+    </section>
 
-<h3> оо Информация</h3>
+    <section class="wrap" id="downloads">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Загрузки</div>
+          <h2>Версии Bluewser</h2>
+          <div class="muted">Последние релизы GitHub и доступные APK-файлы.</div>
+        </div>
+        <a class="button secondary" href="https://github.com/BeNQ15/Bluewser/releases" target="_blank" rel="noopener">Все релизы ↗</a>
+      </div>
+      <div id="releases" class="release-list" aria-live="polite">
+        <div class="empty">Загружаем список релизов…</div>
+      </div>
+    </section>
 
-<p>
-    Ⓒ Bluewser, 2026. о
-</p>
+    <section class="wrap" id="extensions">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Экосистема Bluewser</div>
+          <h2>Extensions</h2>
+          <div class="muted">Расширения, которые можно использовать в Bluewser.</div>
+        </div>
+      </div>
 
-<p>
-    Все права посинели. Реально?
-</p>
+      <div class="grid">
+        <article class="card">
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">🧩</div>
+            <div><h3>Каталог расширений</h3><div class="meta">Подборка для Bluewser</div></div>
+          </div>
+          <p>Здесь появятся расширения, проверенные для вашей системы.</p>
+          <a class="button secondary" href="#install">Как установить</a>
+        </article>
 
+        <article class="card">
+          <div class="card-top">
+            <div class="icon" aria-hidden="true">🛠️</div>
+            <div><h3>Редактор расширений</h3><div class="meta">Создавайте свои инструменты</div></div>
+          </div>
+          <p>Расскажите о редакторе, его возможностях и формате расширений.</p>
+          <a class="button secondary" href="#about">О проекте</a>
+        </article>
+      </div>
+
+      <div class="notice" id="install" style="margin-top:16px">
+        <strong>Установка:</strong> добавьте сюда инструкцию для вашей версии Bluewser.
+        Когда будет готов способ установки по ссылке с сайта, кнопку можно будет связать с ним.
+      </div>
+    </section>
+
+    <section class="wrap" id="about">
+      <div class="eyebrow">О проекте</div>
+      <h2>Интернет — даже когда сеть подводит</h2>
+      <p class="intro">
+        В Bluewser расширения построены с упором на локальную работу.
+        На этой странице можно разместить документацию, требования к расширениям,
+        инструкции для пользователей и ссылки на исходный код.
+      </p>
+      <a class="button secondary" href="https://github.com/BeNQ15/Bluewser" target="_blank" rel="noopener">Открыть проект на GitHub ↗</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Bluewser · Android-браузер с расширениями · <a href="https://github.com/BeNQ15/Bluewser" target="_blank" rel="noopener">GitHub</a></div>
+  </footer>
+
+  <script>
+    const RELEASES_API =
+      "https://api.github.com/repos/BeNQ15/Bluewser/releases?per_page=5";
+
+    const releasesBox = document.getElementById("releases");
+
+    function safeDate(value) {
+      if (!value) return "Дата не указана";
+      return new Intl.DateTimeFormat("ru-RU", { dateStyle: "medium" })
+        .format(new Date(value));
+    }
+
+    async function loadReleases() {
+      try {
+        const response = await fetch(RELEASES_API, {
+          headers: { "Accept": "application/vnd.github+json" }
+        });
+        if (!response.ok) throw new Error("GitHub API: " + response.status);
+
+        const releases = await response.json();
+        releasesBox.replaceChildren();
+
+        if (!releases.length) {
+          releasesBox.innerHTML =
+            '<div class="empty">Релизов пока нет. APK появятся здесь после публикации релиза с GitHub.</div>';
+          return;
+        }
+
+        for (const release of releases.slice(0, 5)) {
+          const apks = (release.assets || []).filter(asset =>
+            asset.name.toLowerCase().endsWith(".apk")
+          );
+
+          const card = document.createElement("article");
+          card.className = "card release";
+
+          const info = document.createElement("div");
+          const title = document.createElement("h3");
+          title.textContent = release.name || release.tag_name || "Релиз Bluewser";
+          const date = document.createElement("div");
+          date.className = "meta";
+          date.textContent = safeDate(release.published_at);
+          info.append(title, date);
+
+          const links = document.createElement("div");
+          links.className = "actions";
+          links.style.marginTop = "0";
+
+          if (apks.length) {
+            for (const apk of apks) {
+              const link = document.createElement("a");
+              link.className = "button";
+              link.href = apk.browser_download_url;
+              link.textContent = "Скачать " + apk.name;
+              link.setAttribute("aria-label", "Скачать " + apk.name);
+              links.append(link);
+            }
+          } else {
+            const link = document.createElement("a");
+            link.className = "button secondary";
+            link.href = release.html_url;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = "Открыть релиз ↗";
+            links.append(link);
+          }
+
+          card.append(info, links);
+          releasesBox.append(card);
+        }
+      } catch (error) {
+        releasesBox.innerHTML =
+          '<div class="notice">Не удалось загрузить релизы автоматически. ' +
+          '<a href="https://github.com/BeNQ15/Bluewser/releases" target="_blank" rel="noopener">Откройте релизы на GitHub ↗</a></div>';
+        console.error(error);
+      }
+    }
+
+    loadReleases();
+  </script>
 </body>
 </html>
